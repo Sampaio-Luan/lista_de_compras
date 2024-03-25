@@ -8,10 +8,13 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  GlobalKey formKey = GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>();
   TextEditingController nome = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController senha = TextEditingController();
+  bool login = true;
+  String textbtn = "ENTRAR";
+  String titulo = "LOGIN";
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +69,21 @@ class _LoginViewState extends State<LoginView> {
                             ],
                           ),
                         ),
-                        height: 350,
+                        height: 390,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 40),
                         padding: const EdgeInsets.all(15),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            campo(nome, 'Nome', 0),
+                            Text(
+                              titulo,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 30),
+                            ),
+                            login == false
+                                ? campo(nome, 'Nome', 0)
+                                : const Text(''),
                             campo(email, 'Email', 1),
                             campo(senha, 'Senha', 2),
                             ElevatedButton(
@@ -84,10 +94,21 @@ class _LoginViewState extends State<LoginView> {
                                 minimumSize: const Size(200, 50),
                                 shadowColor: Colors.white,
                               ),
-                              onPressed: () { },
-                              child: const Text(
-                                'ENTRAR',
-                                style: TextStyle(fontSize: 18),
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  setState(() {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Deu certo'),
+                                        duration: Duration(seconds: 3),
+                                      ),
+                                    );
+                                  });
+                                }
+                              },
+                              child: Text(
+                                textbtn,
+                                style: const TextStyle(fontSize: 18),
                               ),
                             ),
                           ],
@@ -97,7 +118,13 @@ class _LoginViewState extends State<LoginView> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              login = false;
+                              textbtn = 'CADASTRAR';
+                              titulo = 'CADASTRO';
+                              formKey.currentState!.reset();
+                              setState(() {});
+                            },
                             child: const Text(
                               'Cadastrar-me',
                               style:
@@ -113,6 +140,19 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                         ],
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          login = true;
+                          textbtn = 'ENTRAR';
+                          titulo = "LOGIN";
+                          formKey.currentState!.reset();
+                          setState(() {});
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
                     ],
                   ),
@@ -154,9 +194,8 @@ class _LoginViewState extends State<LoginView> {
         if (value == null) {
           return 'Preenchimento obrigatorio';
         } else if (value.isEmpty) {
-          return 'Informe um valor';
+          return 'Preenchimento obrigatorio';
         }
-        //Retornar null significa sucesso na validação
         return null;
       },
     );

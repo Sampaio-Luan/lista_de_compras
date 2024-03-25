@@ -1,4 +1,4 @@
-#Sun Mar 24 20:42:21 BRT 2024
+#Mon Mar 25 19:12:40 BRT 2024
 base.0=C\:\\Users\\LUAN SAMPAIO\\OneDrive - Fatec Centro Paula Souza\\Desktop\\ESTUDOS\\FATEC\\lista_de_compras\\build\\host\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
