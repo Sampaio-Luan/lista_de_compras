@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_de_compras/meu_app.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -9,12 +10,16 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   var formKey = GlobalKey<FormState>();
-  TextEditingController nome = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController senha = TextEditingController();
+  TextEditingController nomeC = TextEditingController();
+  TextEditingController emailC = TextEditingController();
+  TextEditingController senhaC = TextEditingController();
   bool login = true;
   String textbtn = "ENTRAR";
   String titulo = "LOGIN";
+
+  String nome = '';
+  String email = '';
+  String senha = '';
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +87,10 @@ class _LoginViewState extends State<LoginView> {
                                   color: Colors.white, fontSize: 30),
                             ),
                             login == false
-                                ? campo(nome, 'Nome', 0)
+                                ? campo(nomeC, 'Nome', 0)
                                 : const Text(''),
-                            campo(email, 'Email', 1),
-                            campo(senha, 'Senha', 2),
+                            campo(emailC, 'Email', 1),
+                            campo(senhaC, 'Senha', 2),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -96,14 +101,39 @@ class _LoginViewState extends State<LoginView> {
                               ),
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
-                                  setState(() {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Deu certo'),
-                                        duration: Duration(seconds: 3),
-                                      ),
+                                  if (login == false) {
+                                    nome = nomeC.text;
+                                    email = emailC.text;
+                                    senha = senhaC.text;
+
+                                    nomeC.text = '';
+                                    emailC.text = '';
+                                    senhaC.text = '';
+
+                                    textbtn = 'ENTRAR';
+                                    titulo = "LOGIN";
+
+                                    login = true;
+                                    setState(() {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Cadastrado com sucesso, realize o login'),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    });
+                                  }
+
+                                  if (emailC.text == email &&
+                                      senhaC.text == senha) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const MyApp()),
                                     );
-                                  });
+                                  }
                                 }
                               },
                               child: Text(
@@ -117,43 +147,11 @@ class _LoginViewState extends State<LoginView> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          TextButton(
-                            onPressed: () {
-                              login = false;
-                              textbtn = 'CADASTRAR';
-                              titulo = 'CADASTRO';
-                              formKey.currentState!.reset();
-                              setState(() {});
-                            },
-                            child: const Text(
-                              'Cadastrar-me',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Esqueci a senha',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          ),
+                          txtbtn(1, 'Cadastrar-me'),
+                          txtbtn(2, 'Esqueci a senha'),
                         ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          login = true;
-                          textbtn = 'ENTRAR';
-                          titulo = "LOGIN";
-                          formKey.currentState!.reset();
-                          setState(() {});
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
+                      txtbtn(3, 'Login'),
                     ],
                   ),
                 ),
@@ -161,6 +159,85 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actionsAlignment: MainAxisAlignment.spaceAround,
+          title: const Text(
+            'IMPORTANTE',
+            textAlign: TextAlign.center,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                const Text(
+                  'Digite seu email, e confirme para receber um link para redefinicao da senha',
+                  style: TextStyle(fontSize: 16),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                campo(emailC, 'Email', 1),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Confirmar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Acesse seu email para redefinir senha'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  TextButton txtbtn(int op, String label) {
+    return TextButton(
+      onPressed: () {
+        switch (op) {
+          case 1:
+            login = false;
+            textbtn = 'CADASTRAR';
+            titulo = 'CADASTRO';
+            break;
+          case 3:
+            login = true;
+            textbtn = 'ENTRAR';
+            titulo = "LOGIN";
+            break;
+        }
+        if (op == 2) {
+          _showMyDialog();
+        }
+
+        formKey.currentState!.reset();
+        setState(() {});
+      },
+      child: Text(
+        label,
+        style: const TextStyle(color: Colors.white, fontSize: 18),
       ),
     );
   }
