@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.lista_de_compras.host.app-mergeDebugResources-13:/values/values.xml",
+            "outputFile": "com.example.lista_de_compras.host.app-mergeDebugResources-14:/values/values.xml",
             "map": [
                 {
                     "source": "C:\\Users\\LUAN SAMPAIO\\.gradle\\caches\\transforms-3\\e96dfd4805c22329dc86975f01e4952a\\transformed\\constraintlayout-1.1.3\\res\\values\\values.xml",

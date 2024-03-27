@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.lista_de_compras.host.app-mergeDebugResources-13:/values-km/values-km.xml",
+            "outputFile": "com.example.lista_de_compras.host.app-mergeDebugResources-14:/values-km/values-km.xml",
             "map": [
                 {
                     "source": "C:\\Users\\LUAN SAMPAIO\\.gradle\\caches\\transforms-3\\223b9f790050b6c01f7edb01f29885db\\transformed\\appcompat-1.0.2\\res\\values-km\\values-km.xml",
