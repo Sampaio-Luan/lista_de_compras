@@ -131,8 +131,19 @@ class _LoginViewState extends State<LoginView> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const MyApp()),
+                                          builder: (context) => const MyHomePage(title: 'Listas de Compras',)),
                                     );
+                                  }else{
+                                    setState(() {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Email ou senha incorretos'),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    });
                                   }
                                 }
                               },

@@ -1,10 +1,10 @@
 [
     {
-        "merged": "com.example.lista_de_compras.host.app-merged_res-15:/mipmap-hdpi_ic_launcher.png.flat",
+        "merged": "com.example.lista_de_compras.host.app-merged_res-16:/mipmap-hdpi_ic_launcher.png.flat",
         "source": "com.example.lista_de_compras.host.app-main-9:/mipmap-hdpi/ic_launcher.png"
     },
     {
-        "merged": "com.example.lista_de_compras.host.app-merged_res-15:/drawable_launch_background.xml.flat",
+        "merged": "com.example.lista_de_compras.host.app-merged_res-16:/drawable_launch_background.xml.flat",
         "source": "com.example.lista_de_compras.host.app-main-9:/drawable/launch_background.xml"
     }
 ]
