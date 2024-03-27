@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lista_de_compras/meu_app.dart';
+import 'package:lista_de_compras/views/home_view.dart';
+
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -131,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const MyHomePage(title: 'Listas de Compras',)),
+                                          builder: (context) => const HomePage(title: 'Listas de Compras',)),
                                     );
                                   }else{
                                     setState(() {

@@ -6,7 +6,7 @@ void main() {
   runApp(
     DevicePreview(
       enabled: true,
-      builder: (context) =>  const MyApp(),
+      builder: (context) =>  const MeuApp(),
     ),
   );
 }
