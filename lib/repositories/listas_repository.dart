@@ -4,13 +4,13 @@ import 'package:lista_de_compras/models/item_model.dart';
 import 'package:lista_de_compras/models/lista_model.dart';
 
 class ListasRespository {
-final List<ListaModel> _listaItems = [];
+final List<ListaModel> _listaItens = [];
 
-  UnmodifiableListView<ListaModel> get listas => UnmodifiableListView(_listaItems);
+  UnmodifiableListView<ListaModel> get listas => UnmodifiableListView(_listaItens);
 
   criarLista(ListaModel lista){
 
-    _listaItems.add(lista);
+    _listaItens.add(lista);
 
     debugPrint('Lista criada');
 
@@ -18,7 +18,7 @@ final List<ListaModel> _listaItems = [];
 
     editarLista(int index, String nome){
 
-    _listaItems[index].nome = nome;
+    _listaItens[index].nome = nome;
 
     debugPrint('Lista editada');
 
@@ -26,7 +26,7 @@ final List<ListaModel> _listaItems = [];
 
     excluirLista(ListaModel lista){
 
-    _listaItems.remove(lista);
+    _listaItens.remove(lista);
 
     debugPrint('Lista excluida');
 
@@ -34,24 +34,24 @@ final List<ListaModel> _listaItems = [];
 
   addItem(int index ,ItemModel item){
 
-    _listaItems[index].itens.add(item);
+    _listaItens[index].itens.add(item);
 
-    debugPrint('item adiconado a lista ${_listaItems[index].nome}');
+    debugPrint('item adiconado a lista ${_listaItens[index].nome}');
   }
 
   removerItem(int index ,ItemModel item){
 
-    _listaItems[index].itens.remove(item);
+    _listaItens[index].itens.remove(item);
 
-    debugPrint('item removido da lista ${_listaItems[index].nome}');
+    debugPrint('item removido da lista ${_listaItens[index].nome}');
 
   }
 
     editarItem(int index ,int indexI, ItemModel item){
 
-    _listaItems[index].itens[indexI] = item;
+    _listaItens[index].itens[indexI] = item;
 
-    debugPrint('item editado na lista ${_listaItems[index].nome}');
+    debugPrint('item editado na lista ${_listaItens[index].nome}');
 
   }
 
