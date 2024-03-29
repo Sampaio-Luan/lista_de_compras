@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lista_de_compras/models/lista_model.dart';
+import 'package:lista_de_compras/repositories/listas_repository.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -14,9 +16,12 @@ class _HomePageState extends State<HomePage> {
   TextEditingController descricao = TextEditingController();
   TextEditingController quantidade = TextEditingController();
   TextEditingController listaCompras = TextEditingController();
+  var nomeListaFormKey = GlobalKey<FormState>();
+  final repositorio = ListasRespository();
 
   @override
   Widget build(BuildContext context) {
+    final listas = repositorio.listas;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -31,20 +36,33 @@ class _HomePageState extends State<HomePage> {
           ),
           centerTitle: true,
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ],
-          ),
-        ),
+        body: listas.isNotEmpty
+            ? GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // number of items in each row
+                  mainAxisSpacing: 8.0, // spacing between rows
+                  crossAxisSpacing: 8.0, // spacing between columns
+                ),
+                padding: const EdgeInsets.all(8.0), // padding around the grid
+                itemCount: listas.length, // total number of items
+                itemBuilder: (context, index) {
+                  return Card.outlined(
+                    //color: Colors.pink[200],
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.shopify_sharp, color: Colors.green[900], size: 70,),
+                        Text(listas[index].nome,
+                            style: const TextStyle(fontSize: 18.0)),
+                      ],
+                    ),
+                  );
+                },
+              )
+            : const Center(
+                child:
+                    Text('Crie uma lista de compras para Adiconar seus itens')),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             showDialog(
@@ -52,15 +70,17 @@ class _HomePageState extends State<HomePage> {
                 builder: (BuildContext context) {
                   return novaLista();
                 });
-          }, //novaLista(),
-          tooltip: 'Increment',
-          label: const Text('Nova Lista',style: TextStyle(color: Colors.white, fontSize: 16),),
-          icon: const Icon(Icons.add, color: Colors.white,),
+          },
+          label: const Text(
+            'Criar Lista',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          icon: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
           backgroundColor: Colors.green[700],
-          
-          
-        
-        ), // This trailing comma makes auto-formatting nicer for build methods.
+        ),
       ),
     );
   }
@@ -73,26 +93,30 @@ class _HomePageState extends State<HomePage> {
         'Nova Lista de Compras',
         textAlign: TextAlign.center,
       ),
-      content: TextFormField(
-        controller: listaCompras,
-        style: const TextStyle(fontSize: 16),
-        decoration: const InputDecoration(
-            labelText: 'Nome da Lista',
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
-              borderRadius: BorderRadius.all(
-                Radius.circular(25.0),
+      content: Form(
+        key: nomeListaFormKey,
+        child: TextFormField(
+          controller: listaCompras,
+          style: const TextStyle(fontSize: 16),
+          decoration: const InputDecoration(
+              helperText: 'Digite o nome da sua lista de compras',
+              labelText: 'Nome da Lista',
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.0),
+                ),
               ),
-            ),
-            prefixIcon: Icon(Icons.shopping_cart_outlined)),
-        validator: (value) {
-          if (value == null) {
-            return 'Preenchimento obrigatorio';
-          } else if (value.isEmpty) {
-            return 'Preenchimento obrigatorio';
-          }
-          return null;
-        },
+              prefixIcon: Icon(Icons.shopping_cart_outlined)),
+          validator: (value) {
+            if (value == null) {
+              return 'Preenchimento obrigatorio';
+            } else if (value.isEmpty) {
+              return 'Preenchimento obrigatorio';
+            }
+            return null;
+          },
+        ),
       ),
       actions: [
         TextButton(
@@ -105,8 +129,13 @@ class _HomePageState extends State<HomePage> {
         TextButton(
           onPressed: () {
             debugPrint(listaCompras.text);
-
-            Navigator.pop(context);
+            if (nomeListaFormKey.currentState!.validate()) {
+              ListaModel lista = ListaModel(nome: listaCompras.text, itens: []);
+              repositorio.criarLista(lista);
+              listaCompras.text = '';
+              setState(() {});
+              Navigator.pop(context);
+            }
           },
           child: const Text("Adicionar"),
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lista_de_compras/views/login_view.dart';
+import 'package:lista_de_compras/views/home_view.dart';
 
 
 class MeuApp extends StatelessWidget {
@@ -9,12 +9,13 @@ class MeuApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Lista de Compras',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
         
       ),
-      home: const LoginView(),
+      home:  const HomePage(title:'Lista de Compras'),
     );
   }
 }

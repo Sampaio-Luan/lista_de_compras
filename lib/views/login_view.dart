@@ -243,6 +243,9 @@ class _LoginViewState extends State<LoginView> {
         if (op == 2) {
           _showMyDialog();
         }
+        nomeC.text = '';
+        emailC.text = '';
+        senhaC.text = '';
 
         formKey.currentState!.reset();
         setState(() {});
@@ -269,6 +272,7 @@ class _LoginViewState extends State<LoginView> {
       controller: controller,
       obscureText: index == 2 ? true : false,
       style: const TextStyle(fontSize: 16),
+     
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(
