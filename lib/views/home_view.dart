@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lista_de_compras/models/lista_model.dart';
 import 'package:lista_de_compras/repositories/listas_repository.dart';
+import 'package:lista_de_compras/views/lista_itens_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -46,21 +47,38 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(8.0), // padding around the grid
                 itemCount: listas.length, // total number of items
                 itemBuilder: (context, index) {
-                  return Card.outlined(
-                    //color: Colors.pink[200],
-
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(
-                          Icons.shopify_sharp,
-                          color: Colors.green[900],
-                          size: 70,
-                        ),
-                        Text(listas[index].nome,
-                            style: const TextStyle(fontSize: 18.0)),
-                      ],
+                  return InkWell(
+                    child: Card.outlined(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(
+                            Icons.shopify_sharp,
+                            color: Colors.green[700],
+                            size: 50,
+                          ),
+                          Text(
+                            listas[index].nome,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 18.0),
+                            overflow: listas[index].nome.length > 15
+                                ? TextOverflow.ellipsis
+                                : null,
+                          ),
+                        ],
+                      ),
                     ),
+                    onLongPress: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListaItensView(indice:index,
+                            lista: listas[index],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               )
