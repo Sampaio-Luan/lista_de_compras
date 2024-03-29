@@ -52,7 +52,11 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(Icons.shopify_sharp, color: Colors.green[900], size: 70,),
+                        Icon(
+                          Icons.shopify_sharp,
+                          color: Colors.green[900],
+                          size: 70,
+                        ),
                         Text(listas[index].nome,
                             style: const TextStyle(fontSize: 18.0)),
                       ],
