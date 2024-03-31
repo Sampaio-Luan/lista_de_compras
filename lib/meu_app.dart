@@ -15,7 +15,7 @@ class MeuApp extends StatelessWidget {
         primarySwatch: Colors.green,
         
       ),
-      home:  const HomePage(title:'Lista de Compras'),
+      home:  const HomePage(title:'Listas de Compras'),
     );
   }
 }

@@ -13,12 +13,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController titulo = TextEditingController();
-  TextEditingController descricao = TextEditingController();
-  TextEditingController quantidade = TextEditingController();
   TextEditingController listaCompras = TextEditingController();
+  int tema = 0;
   var nomeListaFormKey = GlobalKey<FormState>();
   final repositorio = ListasRespository();
+
+  List<Color> cor = [
+    Colors.green,
+    Colors.blue,
+    Colors.pink,
+  ];
+
+  List<IconData> icone = [
+    Icons.payments_outlined,
+    Icons.shopping_cart_outlined,
+    Icons.shopify_outlined,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.green[700],
+          backgroundColor: Colors.green,
           automaticallyImplyLeading: false,
           title: Text(
             widget.title,
@@ -40,12 +50,12 @@ class _HomePageState extends State<HomePage> {
         body: listas.isNotEmpty
             ? GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // number of items in each row
-                  mainAxisSpacing: 8.0, // spacing between rows
-                  crossAxisSpacing: 8.0, // spacing between columns
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 8.0,
                 ),
-                padding: const EdgeInsets.all(8.0), // padding around the grid
-                itemCount: listas.length, // total number of items
+                padding: const EdgeInsets.all(8.0),
+                itemCount: listas.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     child: Card.outlined(
@@ -53,8 +63,8 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Icon(
-                            Icons.shopify_sharp,
-                            color: Colors.green[700],
+                            icone[listas[index].tema],
+                            color: cor[listas[index].tema],
                             size: 50,
                           ),
                           Text(
@@ -70,11 +80,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onLongPress: () {},
                     onTap: () {
+                      debugPrint('$index');
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ListaItensView(indice:index,
-                            lista: listas[index],
+                          builder: (context) => ListaItensView(
+                            lis: listas[index],
+                            lbl: listas[index].nome,
+                            indice: index,
                           ),
                         ),
                       );
@@ -101,7 +115,7 @@ class _HomePageState extends State<HomePage> {
             Icons.add,
             color: Colors.white,
           ),
-          backgroundColor: Colors.green[700],
+          backgroundColor: Colors.green[500],
         ),
       ),
     );
@@ -152,7 +166,10 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             debugPrint(listaCompras.text);
             if (nomeListaFormKey.currentState!.validate()) {
-              ListaModel lista = ListaModel(nome: listaCompras.text, itens: []);
+              tema++;
+              if (tema > 2) tema = 0;
+              ListaModel lista =
+                  ListaModel(nome: listaCompras.text, tema: tema, itens: []);
               repositorio.criarLista(lista);
               listaCompras.text = '';
               setState(() {});
