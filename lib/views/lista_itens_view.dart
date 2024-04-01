@@ -234,6 +234,7 @@ class _ListaItensViewState extends State<ListaItensView> {
                                       descricao.text = filtro[index].descricao;
                                       quantidade.text =
                                           filtro[index].quantidade.toString();
+                                          selecionados = [];
                                       showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -392,15 +393,17 @@ class _ListaItensViewState extends State<ListaItensView> {
         width: MediaQuery.of(context).size.width,
         child: Form(
             key: formItemKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                campoTexto(titulo, 'Nome Item', true, null, false),
-                const SizedBox(height: 15),
-                campoTexto(descricao, 'Descrição', false, 3, false),
-                const SizedBox(height: 15),
-                campoTexto(quantidade, 'Quantidade', false, null, true),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  campoTexto(titulo, 'Nome Item', true, null, false),
+                  const SizedBox(height: 15),
+                  campoTexto(descricao, 'Descrição', false, 3, false),
+                  const SizedBox(height: 15),
+                  campoTexto(quantidade, 'Quantidade', false, null, true),
+                ],
+              ),
             )),
       ),
       actions: [

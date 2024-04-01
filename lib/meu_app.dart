@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lista_de_compras/views/home_view.dart';
+import 'package:lista_de_compras/views/login_view.dart';
 
 
 class MeuApp extends StatelessWidget {
@@ -15,7 +15,7 @@ class MeuApp extends StatelessWidget {
         primarySwatch: Colors.green,
         
       ),
-      home:  const HomePage(title:'Listas de Compras'),
+      home:  const LoginView(),
     );
   }
 }

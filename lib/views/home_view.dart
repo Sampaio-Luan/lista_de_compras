@@ -55,22 +55,6 @@ class _HomePageState extends State<HomePage> {
     } else {
       return AppBar(
         elevation: 1,
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       for (int a = 0; a < selecionados.length; a++) {
-        //         repositorio.excluirLista(selecionados[a]);
-        //       }
-        //       selecionados = [];
-        //       indices = [];
-        //       setState(() {});
-        //     },
-        //     icon: const Icon(
-        //       Icons.delete_forever,
-        //       color: Colors.white,
-        //     ),
-        //   ),
-        // ],
         title: selecionados.length == 1
             ? Text('${selecionados.length} LISTA SELECIONADA')
             : Text('${selecionados.length} LISTAS SELECIONADAS'),
@@ -104,8 +88,8 @@ class _HomePageState extends State<HomePage> {
               ? GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    mainAxisSpacing: 8.0,
-                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 5.0,
+                    crossAxisSpacing: 5.0,
                   ),
                   padding: const EdgeInsets.all(8.0),
                   itemCount: listas.length,
