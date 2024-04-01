@@ -41,6 +41,88 @@ class _ListaItensViewState extends State<ListaItensView> {
     super.initState();
   }
 
+  void _fill(String query) {
+    setState(() {
+      filtro = lista
+          .where(
+              (obj) => obj.nmItem.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: appBarDinamica(),
+        body: lista.isEmpty
+            ? Center(child: Text('Adicone Itens a sua lista ${widget.lbl}'))
+            : isFiltrar
+                ? filtro.isEmpty
+                    ? Center(
+                        child: Text(
+                          filtrar.text.isEmpty
+                              ? 'Digite o nome do item para pesquisar'
+                              : 'Não há "${filtrar.text}" nessa lista !',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      )
+                    : visualizacaoLisya(filtro)
+                : visualizacaoLisya(lista),
+        floatingActionButtonLocation: selecionados.isEmpty
+            ? FloatingActionButtonLocation.endFloat
+            : FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: selecionados.isEmpty && !isFiltrar
+            ? FloatingActionButton.extended(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return addItem('', 0);
+                      });
+                },
+                label: const Text(
+                  'Add Item',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                backgroundColor: cor[widget.lis.tema],
+              )
+            : isFiltrar && selecionados.isNotEmpty || selecionados.isNotEmpty
+                ? FloatingActionButton.extended(
+                    onPressed: () {
+                      if (selecionados.isNotEmpty) {
+                        for (int a = 0; a < selecionados.length; a++) {
+                          lista.remove(selecionados[a]);
+                          filtro.remove(selecionados[a]);
+                          repositorio.removerItem(
+                              widget.indice, selecionados[a]);
+                        }
+
+                        setState(() {
+                          selecionados = [];
+                        });
+                      }
+                    },
+                    label: const Text(
+                      'Excluir',
+                      style: TextStyle(color: Colors.white, fontSize: 22),
+                    ),
+                    icon: const Icon(
+                      Icons.delete_forever,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.orange,
+                  )
+                : null,
+      ),
+    );
+  }
+
   AppBar appBarDinamica() {
     if (isFiltrar) {
       return AppBar(
@@ -51,6 +133,8 @@ class _ListaItensViewState extends State<ListaItensView> {
               setState(() {
                 isFiltrar = !isFiltrar;
                 filtrar.text = '';
+                filtro = [];
+                selecionados = [];
               });
             }),
         title: Padding(
@@ -59,7 +143,11 @@ class _ListaItensViewState extends State<ListaItensView> {
             controller: filtrar,
             onEditingComplete: () {},
             onChanged: (value) {
-              _fill(value);
+              filtrar.text.isEmpty
+                  ? setState(() {
+                      filtro = [];
+                    })
+                  : _fill(value);
             },
             style: const TextStyle(color: Colors.black),
             cursorColor: cor[widget.lis.tema],
@@ -77,14 +165,23 @@ class _ListaItensViewState extends State<ListaItensView> {
     } else if (selecionados.isEmpty) {
       return AppBar(
         elevation: 1,
-        title: Text(widget.lbl),
+        title: Text(
+          widget.lbl,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
         centerTitle: true,
+        foregroundColor: Colors.white,
         backgroundColor: cor[widget.lis.tema],
         actions: <Widget>[
           IconButton(
               icon: const Icon(
                 Icons.search,
-                color: Colors.black,
+                color: Colors.white,
                 size: 26,
               ),
               onPressed: () {
@@ -119,266 +216,81 @@ class _ListaItensViewState extends State<ListaItensView> {
     }
   }
 
-  void _fill(String query) {
-    setState(() {
-      filtro = lista
-          .where(
-              (obj) => obj.nmItem.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
-  }
+  ListView visualizacaoLisya(List<ItemModel> l) {
+    return ListView.builder(
+      itemCount: l.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Card(
+          color: Colors.white,
+          surfaceTintColor: cor[widget.lis.tema],
+          child: Row(
+            children: [
+              Expanded(
+                flex: 9,
+                child: ListTile(
+                  onLongPress: () {
+                    setState(() {
+                      (selecionados.contains(l[index]))
+                          ? selecionados.remove(l[index])
+                          : selecionados.add(l[index]);
+                    });
+                  },
+                  selected: selecionados.contains(l[index]),
+                  selectedTileColor: Colors.orange,
+                  selectedColor: Colors.white,
+                  title: Text(l[index].nmItem),
+                  subtitle: Text(
+                    l[index].descricao,
+                    overflow: l[index].descricao.length > 30
+                        ? TextOverflow.ellipsis
+                        : null,
+                  ),
+                  leading: CircleAvatar(
+                    backgroundColor: cor[widget.lis.tema].withAlpha(180),
+                    child: Text(
+                      '${l[index].quantidade}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  trailing: Checkbox(
+                    activeColor: cor[widget.lis.tema],
+                    value: l[index].isCheck,
+                    onChanged: (bool? novoValor) {
+                      setState(() {
+                        l[index].isCheck = !l[index].isCheck;
+                      });
 
-  Widget pesquisar(Function cancelSearch, Function searching,
-      TextEditingController searchController) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      leading: IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            cancelSearch();
-          }),
-      title: Padding(
-        padding: const EdgeInsets.only(bottom: 10, right: 10),
-        child: TextField(
-          controller: searchController,
-          onEditingComplete: () {
-            searching();
-          },
-          style: const TextStyle(color: Colors.white),
-          cursorColor: Colors.white,
-          autofocus: true,
-          decoration: const InputDecoration(
-            focusColor: Colors.white,
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  int indiceItem = 0;
-  @override
-  Widget build(BuildContext context) {
-    int i = widget.indice;
-    debugPrint('valor de i $i');
-
-    return SafeArea(
-      child: Scaffold(
-        appBar: appBarDinamica(),
-        body: lista.isEmpty
-            ? Center(child: Text('Adicone Itens a sua lista ${widget.lbl}'))
-            : isFiltrar
-                ? filtro.isEmpty
-                    ? const Center(child: Text('Nenhum item encontrado'))
-                    : ListView.builder(
-                        itemCount: filtro.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            color: Colors.white,
-                            surfaceTintColor: cor[widget.lis.tema],
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 9,
-                                  child: ListTile(
-                                    onLongPress: () {
-                                      setState(() {
-                                        (selecionados.contains(lista[index]))
-                                            ? selecionados.remove(lista[index])
-                                            : selecionados.add(lista[index]);
-                                      });
-                                    },
-                                    selected:
-                                        selecionados.contains(filtro[index]),
-                                    selectedTileColor: Colors.orange,
-                                    selectedColor: Colors.white,
-                                    title: Text(filtro[index].nmItem),
-                                    subtitle: Text(
-                                      filtro[index].descricao,
-                                      overflow:
-                                          filtro[index].descricao.length > 30
-                                              ? TextOverflow.ellipsis
-                                              : null,
-                                    ),
-                                    leading: CircleAvatar(
-                                      backgroundColor:
-                                          cor[widget.lis.tema].withAlpha(180),
-                                      child: Text(
-                                        '${filtro[index].quantidade}',
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                    trailing: Checkbox(
-                                      activeColor: cor[widget.lis.tema],
-                                      value: filtro[index].isCheck,
-                                      onChanged: (bool? novoValor) {
-                                        setState(() {
-                                          filtro[index].isCheck =
-                                              !lista[index].isCheck;
-                                        });
-
-                                        repositorio.editarItem(
-                                            widget.indice, index, lista[index]);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: () {
-                                      titulo.text = filtro[index].nmItem;
-                                      descricao.text = filtro[index].descricao;
-                                      quantidade.text =
-                                          filtro[index].quantidade.toString();
-                                          selecionados = [];
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return addItem(
-                                                widget.indice, index, 1);
-                                          });
-                                    },
-                                    icon: Icon(
-                                      Icons.edit_rounded,
-                                      color: cor[widget.lis.tema],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                : ListView.builder(
-                    itemCount: lista.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        color: Colors.white,
-                        surfaceTintColor: cor[widget.lis.tema],
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 9,
-                              child: ListTile(
-                                onLongPress: () {
-                                  setState(() {
-                                    (selecionados.contains(lista[index]))
-                                        ? selecionados.remove(lista[index])
-                                        : selecionados.add(lista[index]);
-                                  });
-                                },
-                                selected: selecionados.contains(lista[index]),
-                                selectedTileColor: Colors.orange,
-                                selectedColor: Colors.white,
-                                title: Text(lista[index].nmItem),
-                                subtitle: Text(
-                                  lista[index].descricao,
-                                  overflow: lista[index].descricao.length > 30
-                                      ? TextOverflow.ellipsis
-                                      : null,
-                                ),
-                                leading: CircleAvatar(
-                                  backgroundColor:
-                                      cor[widget.lis.tema].withAlpha(180),
-                                  child: Text(
-                                    '${lista[index].quantidade}',
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                trailing: Checkbox(
-                                  activeColor: cor[widget.lis.tema],
-                                  value: lista[index].isCheck,
-                                  onChanged: (bool? novoValor) {
-                                    setState(() {
-                                      lista[index].isCheck =
-                                          !lista[index].isCheck;
-                                    });
-
-                                    repositorio.editarItem(
-                                        widget.indice, index, lista[index]);
-                                  },
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: IconButton(
-                                onPressed: () {
-                                  titulo.text = lista[index].nmItem;
-                                  descricao.text = lista[index].descricao;
-                                  quantidade.text =
-                                      lista[index].quantidade.toString();
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return addItem(widget.indice, index, 1);
-                                      });
-                                },
-                                icon: Icon(
-                                  Icons.edit_rounded,
-                                  color: cor[widget.lis.tema],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                      repositorio.editarItem(l[index]);
                     },
                   ),
-        floatingActionButtonLocation: selecionados.isEmpty
-            ? FloatingActionButtonLocation.endFloat
-            : FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: selecionados.isEmpty
-            ? FloatingActionButton.extended(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return addItem(widget.indice, indiceItem, 0);
-                      });
-                },
-                label: const Text(
-                  'Add Item',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                backgroundColor: cor[widget.lis.tema],
-              )
-            : FloatingActionButton.extended(
-                onPressed: () {
-                  if (selecionados.isNotEmpty) {
-                    for (int a = 0; a < selecionados.length; a++) {
-                      lista.remove(selecionados[a]);
-                      repositorio.removerItem(widget.indice, selecionados[a]);
-                    }
-
-                    setState(() {
-                      selecionados = [];
-                    });
-                  }
-                },
-                label: const Text(
-                  'Excluir',
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                ),
-                icon: const Icon(
-                  Icons.delete_forever,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                backgroundColor: Colors.orange,
               ),
-      ),
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    titulo.text = l[index].nmItem;
+                    descricao.text = l[index].descricao;
+                    quantidade.text = l[index].quantidade.toString();
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return addItem(l[index].id, 1);
+                        });
+                  },
+                  icon: Icon(
+                    Icons.edit_rounded,
+                    color: cor[widget.lis.tema],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  AlertDialog addItem(int indiceLista, int indiceItem, int op) {
+  AlertDialog addItem(String id, int op) {
     return AlertDialog(
       insetPadding: const EdgeInsets.all(25),
       elevation: 0,
@@ -388,6 +300,7 @@ class _ListaItensViewState extends State<ListaItensView> {
             ? 'Editar Item em ${widget.lbl}'
             : 'Adiconar Item a ${widget.lbl}',
         textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 20, color: cor[widget.lis.tema]),
       ),
       content: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -399,7 +312,7 @@ class _ListaItensViewState extends State<ListaItensView> {
                 children: [
                   campoTexto(titulo, 'Nome Item', true, null, false),
                   const SizedBox(height: 15),
-                  campoTexto(descricao, 'Descrição', false, 3, false),
+                  campoTexto(descricao, 'Descrição', false, 2, false),
                   const SizedBox(height: 15),
                   campoTexto(quantidade, 'Quantidade', false, null, true),
                 ],
@@ -414,7 +327,10 @@ class _ListaItensViewState extends State<ListaItensView> {
             quantidade.text = '';
             Navigator.pop(context);
           },
-          child: const Text("Cancelar"),
+          child: Text(
+            "Cancelar",
+            style: TextStyle(fontSize: 16, color: cor[widget.lis.tema]),
+          ),
         ),
         TextButton(
           onPressed: () {
@@ -423,18 +339,35 @@ class _ListaItensViewState extends State<ListaItensView> {
                   nmItem: titulo.text,
                   descricao: descricao.text.isEmpty ? '' : descricao.text,
                   quantidade:
-                      quantidade.text.isEmpty ? 1 : int.parse(quantidade.text));
+                      quantidade.text.isEmpty ? 1 : int.parse(quantidade.text),
+                  id: id.isNotEmpty ? id : DateTime.now().toString());
 
-              setState(() {
-                if (op == 1) {
-                  lista[indiceItem] = item;
-                  repositorio.editarItem(indiceLista, indiceItem, item);
-                  selecionados = [];
-                } else {
-                  repositorio.addItem(indiceLista, item);
-                  lista.add(item);
+              if (op == 1) {
+                for (int a = 0; a < lista.length; a++) {
+                  if (lista[a].id == id) {
+                    lista[a] = item;
+                  }
                 }
-              });
+                for (int a = 0; a < filtro.length; a++) {
+                  if (filtro[a].id == id) {
+                    filtro[a] = item;
+                  }
+                }
+
+                repositorio.editarItem(item);
+                selecionados = [];
+              } else {
+                debugPrint(
+                    'Valor do indice passado por parametro: ${widget.indice}');
+
+                setState(() {
+                  lista.add(item);
+                  widget.lis.itens = lista;
+                  repositorio.addItem(widget.lis);
+                });
+              }
+
+              setState(() {});
 
               titulo.text = '';
               descricao.text = '';
@@ -443,7 +376,10 @@ class _ListaItensViewState extends State<ListaItensView> {
               Navigator.pop(context);
             }
           },
-          child: Text(op == 0 ? "Adicionar" : 'Confirmar'),
+          child: Text(
+            op == 0 ? "Adicionar" : 'Confirmar',
+            style: TextStyle(fontSize: 16, color: cor[widget.lis.tema]),
+          ),
         ),
       ],
     );

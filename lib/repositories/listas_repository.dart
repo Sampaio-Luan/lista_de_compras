@@ -20,16 +20,19 @@ class ListasRespository {
         ItemModel(
             nmItem: 'Arroz',
             descricao: 'Pacote de 2kg do Arroz tio ze',
-            quantidade: 3),
+            quantidade: 3,
+            id: 'abc'),
         ItemModel(
             nmItem: 'Feijao',
             descricao: 'Pacote de 3kg Fazenda Vaquinha Feliz',
             quantidade: 4,
-            isCheck: true),
+            isCheck: true,
+            id:'cba'),
         ItemModel(
             nmItem: 'Açucar',
             descricao: 'Pacote de 5kg do Santa Isabel',
-            quantidade: 2),
+            quantidade: 2,
+            id:'cab'),
       ]);
 
       _listaItens.add(listaExemplo);
@@ -54,10 +57,10 @@ class ListasRespository {
     debugPrint('Lista excluida');
   }
 
-  addItem(int index, ItemModel item) async {
-    _listaItens[index].itens.add(item);
+  addItem(ListaModel l) async {
+    _listaItens.add(l);
 
-    debugPrint('item adiconado a lista ${_listaItens[index].nome}');
+    debugPrint('item adiconado a lista ${l.nome}');
   }
 
   removerItem(int index, ItemModel item) async {
@@ -66,9 +69,17 @@ class ListasRespository {
     debugPrint('item removido da lista ${_listaItens[index].nome}');
   }
 
-  editarItem(int index, int indexI, ItemModel item) async {
-    _listaItens[index].itens[indexI] = item;
+  editarItem(ItemModel item) async {
+    
+    for(int i = 0; i <_listaItens.length; i++){
+      for(int j = 0; j < _listaItens[i].itens.length;j++){
+        if (_listaItens[i].itens[j].id == item.id) {
+          _listaItens[i].itens[j] = item;
+          debugPrint('item editado na lista ${_listaItens[i].nome}');
+        }
+      }
+    }
 
-    debugPrint('item editado na lista ${_listaItens[index].nome}');
+    
   }
 }

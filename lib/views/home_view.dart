@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lista_de_compras/models/lista_model.dart';
 import 'package:lista_de_compras/repositories/listas_repository.dart';
 import 'package:lista_de_compras/views/lista_itens_view.dart';
+import 'package:lista_de_compras/views/login_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -41,17 +42,70 @@ class _HomePageState extends State<HomePage> {
   AppBar appBarDinamica() {
     if (selecionados.isEmpty) {
       return AppBar(
-        backgroundColor: Colors.green,
-        automaticallyImplyLeading: false,
-        title: Text(
-          widget.title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 28,
+          backgroundColor: Colors.green,
+          automaticallyImplyLeading: false,
+          title: Text(
+            widget.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+            ),
           ),
-        ),
-        centerTitle: true,
-      );
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      elevation: 0,
+                      actionsAlignment: MainAxisAlignment.spaceBetween,
+                      title: const Text(
+                        'Atenção !!!',
+                        textAlign: TextAlign.center,
+                      ),
+                      content: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Tem certeza que quer sair do app?',
+                            style: TextStyle(fontSize: 22),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            "Não",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginView(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Sim",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    );
+                  });
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+            ),
+          ));
     } else {
       return AppBar(
         elevation: 1,

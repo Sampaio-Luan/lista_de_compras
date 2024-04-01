@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_de_compras/views/home_view.dart';
 
-
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -126,25 +125,39 @@ class _LoginViewState extends State<LoginView> {
                                       );
                                     });
                                   }
-
-                                  if (emailC.text == email &&
-                                      senhaC.text == senha) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const HomePage(title: 'Listas de Compras',)),
-                                    );
-                                  }else{
-                                    setState(() {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Email ou senha incorretos'),
-                                          duration: Duration(seconds: 3),
-                                        ),
+                                  if (emailC.text.isNotEmpty &&
+                                      senhaC.text.isNotEmpty) {
+                                    if (emailC.text == email &&
+                                        senhaC.text == senha) {
+                                      setState(() {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Seja bem vindo'),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      });
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomePage(
+                                                  title: 'Listas de Compras',
+                                                )),
                                       );
-                                    });
+                                    } else {
+                                      setState(() {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Email ou senha incorretos'),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      });
+                                    }
                                   }
                                 }
                               },
@@ -272,7 +285,6 @@ class _LoginViewState extends State<LoginView> {
       controller: controller,
       obscureText: index == 2 ? true : false,
       style: const TextStyle(fontSize: 16),
-     
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(
