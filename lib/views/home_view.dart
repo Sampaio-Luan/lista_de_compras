@@ -50,8 +50,8 @@ class _HomeViewState extends State<HomeView> {
       return AppBar(
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
-        title: Text('Listas deCompras',
-          style: const TextStyle(
+        title: const Text('Listas de Compras',
+          style:  TextStyle(
             fontSize: 28,
           ),
         ),

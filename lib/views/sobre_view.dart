@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lista_de_compras/repositories/listas_repository.dart';
 import 'package:lista_de_compras/views/login_view.dart';
 
 class SobreView extends StatefulWidget {
@@ -20,7 +19,7 @@ class SobreView extends StatefulWidget {
 class _SobreViewState extends State<SobreView> {
   @override
   Widget build(BuildContext context) {
-    final r = ListasRespository();
+    
     String temaEscolhido =
         'O aplicativo é focado em ajudar os usuários a organizar seus itens de compras de maneira eficiente, com recurso de listas e itens editáveis, facilmente gerenciáveis.';
     String objetivo =
