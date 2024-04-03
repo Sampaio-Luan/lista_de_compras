@@ -6,24 +6,6 @@ import 'package:lista_de_compras/models/lista_model.dart';
 
 class ListasRespository {
   final List<ListaModel> _listaItens = [];
-  final TextEditingController _user = TextEditingController();
-  final TextEditingController _pass = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-
-  TextEditingController get user => _user;
-  set usuario(String u) {
-    _user.text = u;
-  }
-
-  TextEditingController get pass => _pass;
-  set senha(String s) {
-    _pass.text = s;
-  }
-
-  TextEditingController get email => _email;
-  set eml(String e) {
-    _email.text = e;
-  }
 
   UnmodifiableListView<ListaModel> get listas =>
       UnmodifiableListView(_listaItens);

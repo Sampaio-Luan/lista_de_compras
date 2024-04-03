@@ -3,7 +3,15 @@ import 'package:lista_de_compras/repositories/listas_repository.dart';
 import 'package:lista_de_compras/views/login_view.dart';
 
 class SobreView extends StatefulWidget {
-  const SobreView({super.key});
+  final String nome;
+  final String email;
+  final String senha;
+
+  const SobreView(
+      {super.key,
+      required this.nome,
+      required this.email,
+      required this.senha});
 
   @override
   State<SobreView> createState() => _SobreViewState();
@@ -29,8 +37,11 @@ class _SobreViewState extends State<SobreView> {
               child: const Icon(Icons.person_3_outlined,
                   size: 50, color: Colors.white),
             ),
-            accountName: Text(r.user.text, style: const TextStyle(color: Colors.white),),
-            accountEmail: Text(r.email.text),
+            accountName: Text(
+              widget.nome,
+             style: const TextStyle(color: Colors.white),
+            ),
+            accountEmail: Text(widget.email),
           ),
           Column(
             children: [
@@ -151,7 +162,7 @@ class _SobreViewState extends State<SobreView> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const LoginView(),
+                                      builder: (context) =>  LoginView(nome: widget.nome, email: widget.email, senha: widget.senha),
                                     ),
                                   );
                                 },

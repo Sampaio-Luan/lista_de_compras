@@ -5,7 +5,15 @@ import 'package:lista_de_compras/views/lista_itens_view.dart';
 import 'package:lista_de_compras/views/sobre_view.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final String nome;
+  final String email;
+  final String senha;
+
+  const HomeView(
+      {super.key,
+      required this.nome,
+      required this.email,
+      required this.senha});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -42,8 +50,7 @@ class _HomeViewState extends State<HomeView> {
       return AppBar(
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
-        title: Text(
-          repositorio.user.text,
+        title: Text('Listas deCompras',
           style: const TextStyle(
             fontSize: 28,
           ),
@@ -82,7 +89,7 @@ class _HomeViewState extends State<HomeView> {
     return SafeArea(
       child: Scaffold(
           appBar: appBarDinamica(),
-          drawer: const SobreView(),
+          drawer:  SobreView(nome: widget.nome, email: widget.email, senha: widget.senha),
           body: listas.isNotEmpty
               ? GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

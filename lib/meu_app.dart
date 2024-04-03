@@ -15,7 +15,7 @@ class MeuApp extends StatelessWidget {
         primarySwatch: Colors.green,
         
       ),
-      home:  const LoginView()
+      home:   const LoginView(nome:'',email:'',senha:'')
     );
   }
 }
