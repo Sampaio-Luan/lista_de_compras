@@ -20,6 +20,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   var formKey = GlobalKey<FormState>();
+  var formKeyE = GlobalKey<FormState>();
   TextEditingController nomeC = TextEditingController();
   TextEditingController emailC = TextEditingController();
   TextEditingController senhaC = TextEditingController();
@@ -196,13 +197,13 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           login
                               ? txtbtn(1, 'Cadastrar-me')
                               : txtbtn(3, 'Login'),
-                          txtbtn(2, 'Esqueci a senha'),
-                        ],
+                          login ? txtbtn(2, 'Esqueci a senha') : const Text(''),
+                        ]
                       ),
                     ],
                   ),
@@ -227,16 +228,19 @@ class _LoginViewState extends State<LoginView> {
             textAlign: TextAlign.center,
           ),
           content: SingleChildScrollView(
-            child: ListBody(
+              child:  ListBody(
               children: [
                 const Text(
-                  'Digite seu email, e confirme para receber um link para redefinicao da senha',
+                  'Digite seu email, e confirme para receber um link para redefinição da senha',
+                  textAlign: TextAlign.justify,
                   style: TextStyle(fontSize: 16),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                campo(emailC, 'Email', 1),
+                Form(
+            key: formKeyE,
+            child:campo(emailC, 'Email', 1))
               ],
             ),
           ),
@@ -250,14 +254,16 @@ class _LoginViewState extends State<LoginView> {
             TextButton(
               child: const Text('Confirmar'),
               onPressed: () {
-                emailC.text = '';
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Acesse seu email para redefinir senha'),
-                    duration: Duration(seconds: 3),
-                  ),
-                );
+                if (formKeyE.currentState!.validate()) {
+                  emailC.text = '';
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Acesse seu email para redefinir senha'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                  Navigator.of(context).pop();
+                }
               },
             ),
           ],

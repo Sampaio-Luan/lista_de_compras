@@ -56,59 +56,61 @@ class _SobreViewState extends State<SobreView> {
                   showModalBottomSheet(
                       context: context,
                       builder: (BuildContext bc) {
-                        return Column(children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 5),
-                            child: Text.rich(
-                              textAlign: TextAlign.justify,
-                              TextSpan(
-                                children: [
-                                  const TextSpan(
-                                    text: '\nSobre:',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                        fontSize: 22),
-                                  ),
-                                  const TextSpan(
-                                    text: '\n\nTema Escolhido: ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                        fontSize: 18),
-                                  ),
-                                  TextSpan(
-                                    text: temaEscolhido,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                  const TextSpan(
-                                    text: '\n\nObjetivo do Aplicativo: ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                        fontSize: 18),
-                                  ),
-                                  TextSpan(
-                                    text: objetivo,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                  const TextSpan(
-                                    text: '\n\nNome do Desenvolvedor: ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                        fontSize: 18),
-                                  ),
-                                  TextSpan(
-                                    text: dev,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                ],
+                        return SingleChildScrollView(
+                          child: Column(children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 5),
+                              child: Text.rich(
+                                textAlign: TextAlign.justify,
+                                TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: '\nSobre:',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          fontSize: 22),
+                                    ),
+                                    const TextSpan(
+                                      text: '\n\nTema Escolhido: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          fontSize: 18),
+                                    ),
+                                    TextSpan(
+                                      text: temaEscolhido,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    const TextSpan(
+                                      text: '\n\nObjetivo do Aplicativo: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          fontSize: 18),
+                                    ),
+                                    TextSpan(
+                                      text: objetivo,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    const TextSpan(
+                                      text: '\n\nNome do Desenvolvedor: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          fontSize: 18),
+                                    ),
+                                    TextSpan(
+                                      text: dev,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
-                        ]);
+                            )
+                          ]),
+                        );
                       });
                 },
               ),
