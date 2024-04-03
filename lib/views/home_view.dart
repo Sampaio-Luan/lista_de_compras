@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:lista_de_compras/models/lista_model.dart';
 import 'package:lista_de_compras/repositories/listas_repository.dart';
 import 'package:lista_de_compras/views/lista_itens_view.dart';
-import 'package:lista_de_compras/views/login_view.dart';
+import 'package:lista_de_compras/views/sobre_view.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
-
-  final String title;
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeViewState extends State<HomeView> {
   TextEditingController listaCompras = TextEditingController();
   int tema = 0;
   var nomeListaFormKey = GlobalKey<FormState>();
@@ -42,70 +40,16 @@ class _HomePageState extends State<HomePage> {
   AppBar appBarDinamica() {
     if (selecionados.isEmpty) {
       return AppBar(
-          backgroundColor: Colors.green,
-          automaticallyImplyLeading: false,
-          title: Text(
-            widget.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-            ),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        title: Text(
+          repositorio.user.text,
+          style: const TextStyle(
+            fontSize: 28,
           ),
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      elevation: 0,
-                      actionsAlignment: MainAxisAlignment.spaceBetween,
-                      title: const Text(
-                        'Atenção !!!',
-                        textAlign: TextAlign.center,
-                      ),
-                      content: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Tem certeza que quer sair do app?',
-                            style: TextStyle(fontSize: 22),
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Não",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginView(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            "Sim",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.white,
-            ),
-          ));
+        ),
+        centerTitle: true,
+      );
     } else {
       return AppBar(
         elevation: 1,
@@ -138,12 +82,13 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
           appBar: appBarDinamica(),
+          drawer: const SobreView(),
           body: listas.isNotEmpty
               ? GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    mainAxisSpacing: 5.0,
-                    crossAxisSpacing: 5.0,
+                    mainAxisSpacing: 3.0,
+                    crossAxisSpacing: 3.0,
                   ),
                   padding: const EdgeInsets.all(8.0),
                   itemCount: listas.length,
@@ -152,26 +97,23 @@ class _HomePageState extends State<HomePage> {
                       child: Card.outlined(
                         color:
                             indices.contains(index) ? Colors.orange[400] : null,
-                        child: SizedBox(
-                          height: 110,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                icone[listas[index].tema],
-                                color: cor[listas[index].tema],
-                                size: 50,
-                              ),
-                              Text(
-                                listas[index].nome,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 18.0),
-                                overflow: listas[index].nome.length > 15
-                                    ? TextOverflow.ellipsis
-                                    : null,
-                              ),
-                            ],
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              icone[listas[index].tema],
+                              color: cor[listas[index].tema],
+                              size: 50,
+                            ),
+                            Text(
+                              listas[index].nome,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 18.0),
+                              overflow: listas[index].nome.length > 15
+                                  ? TextOverflow.ellipsis
+                                  : null,
+                            ),
+                          ],
                         ),
                       ),
                       onLongPress: () {
@@ -203,7 +145,10 @@ class _HomePageState extends State<HomePage> {
                 )
               : const Center(
                   child: Text(
-                      'Crie uma lista de compras para Adiconar seus itens')),
+                    'Crie uma lista de compras para Adiconar seus itens',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
           floatingActionButton: selecionados.isEmpty
               ? FloatingActionButton.extended(
                   onPressed: () {
@@ -218,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   icon: const Icon(
-                    Icons.add,
+                    Icons.library_books_sharp,
                     color: Colors.white,
                   ),
                   backgroundColor: Colors.green[500],
@@ -269,7 +214,6 @@ class _HomePageState extends State<HomePage> {
         ),
         TextButton(
           onPressed: () {
-            debugPrint(listaCompras.text);
             if (nomeListaFormKey.currentState!.validate()) {
               if (isEdit) {
                 repositorio.editarLista(indices[0], listaCompras.text);
@@ -277,12 +221,14 @@ class _HomePageState extends State<HomePage> {
                 indices = [];
               } else {
                 tema++;
+
+                if (tema == 3) {
+                  tema = 0;
+                }
                 ListaModel lista =
                     ListaModel(nome: listaCompras.text, tema: tema, itens: []);
                 repositorio.criarLista(lista);
               }
-
-              if (tema > 2) tema = 0;
 
               listaCompras.text = '';
               setState(() {});

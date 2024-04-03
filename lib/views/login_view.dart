@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_de_compras/repositories/listas_repository.dart';
 import 'package:lista_de_compras/views/home_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -13,16 +14,17 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController nomeC = TextEditingController();
   TextEditingController emailC = TextEditingController();
   TextEditingController senhaC = TextEditingController();
+  final r = ListasRespository();
   bool login = true;
   String textbtn = "ENTRAR";
   String titulo = "LOGIN";
 
-  String nome = '';
-  String email = '';
-  String senha = '';
-
   @override
   Widget build(BuildContext context) {
+    nomeC.text = r.user.text;
+    emailC.text = r.email.text;
+    senhaC.text = r.pass.text;
+
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -40,6 +42,7 @@ class _LoginViewState extends State<LoginView> {
           ),
           child: SingleChildScrollView(
             child: Column(
+              
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
@@ -102,17 +105,18 @@ class _LoginViewState extends State<LoginView> {
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
                                   if (login == false) {
-                                    nome = nomeC.text;
-                                    email = emailC.text;
-                                    senha = senhaC.text;
-
+                                    
+                                    r.usuario = nomeC.text;
+                                    r.eml = emailC.text;
+                                    r.senha = senhaC.text;
+      
                                     nomeC.text = '';
                                     emailC.text = '';
                                     senhaC.text = '';
-
+      
                                     textbtn = 'ENTRAR';
                                     titulo = "LOGIN";
-
+      
                                     login = true;
                                     setState(() {
                                       ScaffoldMessenger.of(context)
@@ -127,14 +131,14 @@ class _LoginViewState extends State<LoginView> {
                                   }
                                   if (emailC.text.isNotEmpty &&
                                       senhaC.text.isNotEmpty) {
-                                    if (emailC.text == email &&
-                                        senhaC.text == senha) {
+                                    if (emailC.text == r.email.text &&
+                                        senhaC.text == r.pass.text) {
                                       setState(() {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Seja bem vindo'),
-                                            duration: Duration(seconds: 3),
+                                           SnackBar(
+                                            content: Text('Seja bem vindo ${r.user.text}'),
+                                            duration: const Duration(seconds: 3),
                                           ),
                                         );
                                       });
@@ -142,9 +146,7 @@ class _LoginViewState extends State<LoginView> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const HomePage(
-                                                  title: 'Listas de Compras',
-                                                )),
+                                                const HomeView()),
                                       );
                                     } else {
                                       setState(() {
@@ -172,11 +174,12 @@ class _LoginViewState extends State<LoginView> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          txtbtn(1, 'Cadastrar-me'),
+                          login
+                              ? txtbtn(1, 'Cadastrar-me') 
+                              : txtbtn(3, 'Login'),
                           txtbtn(2, 'Esqueci a senha'),
                         ],
                       ),
-                      txtbtn(3, 'Login'),
                     ],
                   ),
                 ),
@@ -223,6 +226,7 @@ class _LoginViewState extends State<LoginView> {
             TextButton(
               child: const Text('Confirmar'),
               onPressed: () {
+                emailC.text = '';
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -256,11 +260,11 @@ class _LoginViewState extends State<LoginView> {
         if (op == 2) {
           _showMyDialog();
         }
-        nomeC.text = '';
-        emailC.text = '';
-        senhaC.text = '';
+        //nomeC.text = '';
+        //emailC.text = '';
+        //senhaC.text = '';
 
-        formKey.currentState!.reset();
+        //formKey.currentState!.reset();
         setState(() {});
       },
       child: Text(

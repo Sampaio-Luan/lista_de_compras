@@ -1,7 +1,7 @@
 class ItemModel {
   String nmItem;
   String descricao;
-  int quantidade;
+  String quantidade;
   bool isCheck;
   String id;
 

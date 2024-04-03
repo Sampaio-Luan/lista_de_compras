@@ -101,7 +101,7 @@ class _ListaItensViewState extends State<ListaItensView> {
                           repositorio.removerItem(
                               widget.indice, selecionados[a]);
                         }
-
+      
                         setState(() {
                           selecionados = [];
                         });
@@ -170,7 +170,6 @@ class _ListaItensViewState extends State<ListaItensView> {
           style: const TextStyle(
             color: Colors.white,
             fontSize: 28,
-            
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -248,8 +247,11 @@ class _ListaItensViewState extends State<ListaItensView> {
                   leading: CircleAvatar(
                     backgroundColor: cor[widget.lis.tema].withAlpha(180),
                     child: Text(
-                      '${l[index].quantidade}',
+                      l[index].quantidade,
                       style: const TextStyle(color: Colors.white),
+                      overflow: l[index].quantidade.length > 4
+                          ? TextOverflow.ellipsis
+                          : null,
                     ),
                   ),
                   trailing: Checkbox(
@@ -338,8 +340,7 @@ class _ListaItensViewState extends State<ListaItensView> {
               ItemModel item = ItemModel(
                   nmItem: titulo.text,
                   descricao: descricao.text.isEmpty ? '' : descricao.text,
-                  quantidade:
-                      quantidade.text.isEmpty ? 1 : int.parse(quantidade.text),
+                  quantidade: quantidade.text.isEmpty ? '1' : quantidade.text,
                   id: id.isNotEmpty ? id : DateTime.now().toString());
 
               if (op == 1) {
@@ -353,8 +354,11 @@ class _ListaItensViewState extends State<ListaItensView> {
                     filtro[a] = item;
                   }
                 }
-
+                if(filtro.isNotEmpty){
+                  _fill(filtrar.text);
+                }
                 repositorio.editarItem(item);
+                
                 selecionados = [];
               } else {
                 debugPrint(
